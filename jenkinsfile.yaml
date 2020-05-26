@@ -1,0 +1,231 @@
+#Maven Build--------------------------------------------------------
+appVersion: 1.0
+pomFileLocation: pom.xml
+mavenGoals: package
+buildArtifactType: jar
+useGitShaBuildNumber: false #use git commit timestamp dot git sha as build number (true/false).  default build number set to padded, three digits always returned, Jenkins job number
+mail: kishore.udatha.freelancer@gmail.com
+#--------------------------------------------------------
+#Fortify--------------------------------------------------
+akmid: 102844
+fortifyOnboared: false #initiate fortify scan.  (true/false) if true scan will be initiated
+#-------------------------------------------------------
+#Artifactory --------------------------------------------
+groupId: tmobile.ordermanagement
+artifactId: digital-orders-preprocessor
+artifactoryServerURL: 
+buildArtifactRepoName: libs-snapshot-local
+releaseArtifactRepoName: libs-release-local
+#--------------------------------------------------------
+#Stash--------------------------------------------------
+buildArtifactDir: target
+#-------------------------------------------------------
+#Sonar--------------------------------------------------
+sonarClassesToScanLocation: target/classes
+gateOnSonar: false #run sonar quality check (true/false) if quality check fails pipeline will abort
+#-------------------------------------------------------
+#files to stash-----------------------------------------
+filesToStash:
+  -*.yml
+#-------------------------------------------------------
+#dynamcy environment selection--------------------------
+dynamicEnvSelection: true
+dynamicEnvAllowedChoices:
+  - dlab03
+  - dlab01
+  - dlab02
+  - ilab01
+  - ilab02
+  - qlab01
+  - qlab02
+  - qlab03
+  - qlab06
+  - plab01
+#-------------------------------------------------------
+#PCF Deploy Environments
+featureBranchDeployEnvs:
+  - dlab01
+  - dlab02
+  
+releaseBranchDeployEnvs:
+  - qlab01
+  - qlab02
+  - qlab03
+  - qlab06
+  - plab01
+  
+#hotfixBranchDeployEnvs:
+ # - edp
+developBranchDeployEnvs:
+  - dlab03
+  - ilab01
+
+dlab03:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl: 
+  pcfOrg: OrderManagementAPI
+  pcfSpace: DLAB03
+  skipTest: false
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-DLAB03
+  pcfDomainURL: 
+  pcfManifestName: manifest.yml
+  pcfEnvLockName: digital-orders-preprocessor-DLAB03
+  
+#--------------------------------------------------------
+
+dlab01:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl: 
+  pcfOrg: OrderManagementAPI
+  pcfSpace: DLAB01
+  skipTest: true
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-DLAB01
+  pcfDomainURL: 
+  pcfManifestName: manifest.yml
+  pcfEnvLockName: digital-orders-preprocessor-DLAB01
+  
+#--------------------------------------------------------
+
+dlab02:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl:
+  pcfOrg: OrderManagementAPI
+  pcfSpace: DLAB02
+  skipTest: true
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-DLAB02
+  pcfDomainURL: 
+  pcfManifestName: manifest.yml
+  pcfEnvLockName: digital-orders-preprocessor-DLAB02
+  
+#--------------------------------------------------------
+
+ilab01:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl: 
+  pcfOrg: OrderManagementAPI
+  pcfSpace: ILAB01
+  skipTest: true
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-ILAB01
+  pcfDomainURL: 
+  pcfManifestName: manifest.yml
+  pcfEnvLockName: digital-orders-preprocessor-ILAB01
+  
+#--------------------------------------------------------
+
+ilab02:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl: 
+  pcfOrg: OrderManagementAPI
+  pcfSpace: ILAB02
+  skipTest: true
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-ILAB02
+  pcfDomainURL: 
+  pcfManifestName: manifest.yml
+  pcfEnvLockName: digital-orders-preprocessor-ILAB02
+  
+#--------------------------------------------------------
+
+qlab01:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl: 
+  pcfOrg: OrderManagementAPI
+  pcfSpace: QLAB01
+  skipTest: true
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-QLAB01
+  pcfDomainURL: test.px-npe01b.cf.t-mobile.com
+  pcfManifestName: manifest.yml
+  pcfEnvLockName: digital-orders-preprocessor-QLAB01
+  
+#--------------------------------------------------------
+
+qlab02:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl: 
+  pcfOrg: OrderManagementAPI
+  pcfSpace: QLAB02
+  skipTest: true
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-QLAB02
+  pcfDomainURL: test.px-npe01b.cf.t-mobile.com
+  pcfManifestName: manifest.yml
+  pcfEnvLockName: digital-orders-preprocessor-QLAB02
+  
+#--------------------------------------------------------
+
+qlab03:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl: 
+  pcfOrg: OrderManagementAPI
+  pcfSpace: QLAB03
+  skipTest: true
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-QLAB03
+  pcfDomainURL: test.px-npe01b.cf.t-mobile.com
+  pcfManifestName: manifest.yml
+  pcfEnvLockName: digital-orders-preprocessor-QLAB03
+  
+#--------------------------------------------------------
+
+qlab06:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl: 
+  pcfOrg: OrderManagementAPI
+  pcfSpace: QLAB06
+  skipTest: true
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-QLAB06
+  pcfDomainURL: test.px-npe01b.cf.t-mobile.com
+  pcfManifestName: manifest.yml
+  pcfEnvLockName: digital-orders-preprocessor-QLAB06
+  
+#--------------------------------------------------------
+
+plab01:
+  deployApprovalRequired: true
+  pcfDeployCreds: pcf-OrderManagementAPI
+  pcfApiUrl: 
+  pcfOrg: OrderManagementAPI
+  pcfSpace: PLAB01
+  skipTest: true
+  skipHealth: false
+  sleep: 120
+  pcfDeployScriptName: pcf_auto_switch_route.sh
+  pcfAppName: digital-orders-preprocessor-PLAB01
+  pcfDomainURL: test.px-npe01b.cf.t-mobile.com
+  pcfManifestName: manifest_plab.yml
+  pcfEnvLockName: digital-orders-preprocessor-PLAB01
+  
+#--------------------------------------------------------
