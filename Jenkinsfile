@@ -2,7 +2,7 @@ def props = ''
 def buildNum = ''
 artifactVersion = ''
 def stashName = ''
-def branchName = env.BRANCH_NAME.toLowerCase()
+def branchName = env.BRANCH_NAME
 
 pipeline{
   agent none //WE DO NOT NEED A JENKINS BUILD AGENT YET
@@ -14,7 +14,7 @@ pipeline{
     stage('Setup'){
       steps{
         script{//RUN SCRIPTED PIPELINE LOGIC
-          node('mesos'){
+          node('master'){
             setupPipeline()
           }
 
@@ -66,7 +66,7 @@ def runReleaseProcess(artifactLocation){
   artifactVersion = askDeployVersion()
   echo "deployVersion = ${artifactVersion}"
 
-  node('mesos'){
+  node('master'){
     setup()
     stage ('Retrieve artifacts'){ //RUN THE artifactDownload FUNCTION DEFINED BELOW
       artifactDownload(props,artifactVersion,artifactLocation)
@@ -93,7 +93,7 @@ def runFeatureBranchPipeline(){
 } //END RUN BUILD PIPELINE
 
 def runMasterBranchPipeline(){
-  node('mesos'){
+  node('master'){
     setup()
 
     if(props.fortifyOnboared){ //ONLY INITIATE SCAN IF fortifyOnboared TRUE
@@ -113,7 +113,7 @@ def runMasterBranchPipeline(){
 }//END RUN MASTER BRANCH PIPELINE
 
 def runPullRequestPipeline(){
-  node('mesos'){
+  node('master'){
     setup()
 
     stage('Build'){
@@ -130,7 +130,7 @@ def runHotfixBranchPipeline(){
 }//END RUN HOT FIX PIPELINE
 
 def runBuildProcess(){
-  node('mesos'){
+  node('master'){
     setup()
 
     if(props.fortifyOnboared){ //ONLY INITIATE SCAN IF fortifyOnboared TRUE
@@ -196,7 +196,7 @@ def runBuildProcess(){
     }
   }
 
-  node('mesos'){
+  node('master'){
     cleanWs notFailBuild: true //CLEAN WORKSPACE
     unstash name: stashName //RESTORE STASHED FILES
     //stage('Artifact Upload'){ //RUN THE artifactUpload() FUNCTION DEFINED BELOW
@@ -366,7 +366,7 @@ def deploy(props,deployEnvs,artifactVersion,promoteBuild=false){
 
 def deployAutoSwitch(props,artifactVersion,promoteBuild,deployProps,environment){
   requestApproval(deployProps,"${environment}")  //RUN THE requestApproval FUNCTION DEFINED BELOW
-  node('mesos'){
+  node('master'){
     unstash name: stashName
     if(promoteBuild){
       def artifactRepo = props.releaseArtifactRepoName ? props.releaseArtifactRepoName : 'libs-release-local'
@@ -385,7 +385,7 @@ def deployAutoSwitch(props,artifactVersion,promoteBuild,deployProps,environment)
 
 
 def performAppHealthCheck(props,artifactVersion,deployProps,environment){
-  node('mesos'){
+  node('master'){
    if (deployProps.skipHealth == true){
 				echo "Health Check skipped for ${props.artifactId} Environment: ${environment}"
 					def messageText = "Branch: ${branchName} - Artifact Version: ${artifactVersion} - Jenkins Build Number: ${buildNum} - Job URL: ${env.JOB_URL}"
@@ -419,7 +419,7 @@ def performAppHealthCheck(props,artifactVersion,deployProps,environment){
 
 
 def performAppLevelTest(props,artifactVersion,deployProps,environment){
-  node('mesos'){
+  node('master'){
         if (deployProps.skipTest == true){
 			echo "App level Test skipped for ${props.artifactId} Environment: ${environment}"
 				def messageText = "Branch: ${branchName} - Artifact Version: ${artifactVersion} - Jenkins Build Number: ${buildNum} - Job URL: ${env.JOB_URL}" //slack message
@@ -461,7 +461,7 @@ def performAppLevelTest(props,artifactVersion,deployProps,environment){
 
 def deploySwitchRouteApproval(props,artifactVersion,promoteBuild,deployProps,environment){
   requestApproval(deployProps,"${environment}")  //RUN THE requestApproval FUNCTION DEFINED BELOW
-  node('mesos'){
+  node('master'){
     unstash name: stashName
     if(promoteBuild){
       def artifactRepo = props.releaseArtifactRepoName ? props.releaseArtifactRepoName : 'libs-release-local'
@@ -476,7 +476,7 @@ def deploySwitchRouteApproval(props,artifactVersion,promoteBuild,deployProps,env
   def inputMessage = 'Press Deploy to Switch Route'
   requestRouteApproval(deployProps,"${environment}",inputMessage)  //RUN THE requestApproval FUNCTION DEFINED BELOW
 
-  node('mesos'){
+  node('master'){
     unstash name: stashName
     stage("${environment} Switch Route"){
       def creds = deployProps.pcfDeployCreds ? deployProps.pcfDeployCreds : "pcf-${deployProps.pcfOrg}"
@@ -490,7 +490,7 @@ def deploySwitchRouteApproval(props,artifactVersion,promoteBuild,deployProps,env
 
 def deployApplicationCustomScript(props,artifactVersion,promoteBuild,deployProps,environment){
   requestApproval(deployProps,"${environment}")  //RUN THE requestApproval FUNCTION DEFINED BELOW
-  node('mesos'){
+  node('master'){
     unstash name: stashName
     if(promoteBuild){
       def artifactRepo = props.releaseArtifactRepoName ? props.releaseArtifactRepoName : 'libs-release-local'
